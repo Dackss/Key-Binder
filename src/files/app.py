@@ -1,5 +1,6 @@
 from PyQt5 import QtWidgets, QtGui, QtCore
-from PyQt5.QtWidgets import QMessageBox, QTextEdit, QInputDialog, QShortcut, QLabel, QVBoxLayout, QDialog
+from PyQt5.QtWidgets import QGraphicsOpacityEffect
+from PyQt5.QtCore import QPropertyAnimation
 
 from src.files.input_listener import InputListener
 from src.files.keybind_window import KeyBindWindow
@@ -8,6 +9,7 @@ from src.files.keybind_window import KeyBindWindow
 class App(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
+        self.chat_box_opacity_animation = None
         self.key_label = None
         self.key_base = None
         self.on_release = None
@@ -21,14 +23,21 @@ class App(QtWidgets.QWidget):
         self.setWindowIcon(QtGui.QIcon("src/assets/logo.png"))
         self.setGeometry(100, 100, 575, 350)
 
+        # Styles directement dans le code
+        self.setStyleSheet("""
+            background-color: #D1D2D4;
+            font-family: Lucida;
+        """)
+
         element_info = [
             {"type": QtWidgets.QLabel, "text": "Output", "font_size": 15, "geometry": (400, 8, 250, 20)},
-            {"type": QTextEdit, "name": "chat_box", "font_size": 9, "geometry": (300, 30, 250, 300), "read_only": True},
-            {"type": QtWidgets.QLabel, "name": "key_label", "text": "No key bound", "font_size": 9,
+            {"type": QtWidgets.QTextEdit, "name": "chat_box", "font_size": 12, "geometry": (300, 30, 250, 230),
+             "read_only": True, "border_radius": 10},
+            {"type": QtWidgets.QLabel, "name": "key_label", "text": "No key bound", "font_size": 12,
              "geometry": (150, 200, 250, 20)},
-            {"type": QtWidgets.QDialogButtonBox, "name": "button_box", "font_size": 9,
-             "geometry": (300, 330, 250, 50)},
-            {"type": QtWidgets.QLabel, "name": "base_key", "text": "Base Key: None", "font_size": 10,
+            {"type": QtWidgets.QDialogButtonBox, "name": "button_box", "font_size": 12,
+             "geometry": (300, 310, 250, 50)},
+            {"type": QtWidgets.QLabel, "name": "base_key", "text": "Base Key: None", "font_size": 12,
              "geometry": (150, 50, 250, 20)},
         ]
 
@@ -45,6 +54,16 @@ class App(QtWidgets.QWidget):
             if "read_only" in info:
                 element.setReadOnly(info["read_only"])
 
+        # Animation d'opacité pour la text box
+        self.chat_box_opacity_animation = QPropertyAnimation(self.chat_box.document(), b"opacity")
+        self.chat_box_opacity_animation.setDuration(500)
+        self.chat_box_opacity_animation.setStartValue(0.0)
+        self.chat_box_opacity_animation.setEndValue(1.0)
+
+        # Ajout de l'effet d'opacité à la text box
+        opacity_effect = QGraphicsOpacityEffect(self.chat_box)
+        self.chat_box.setGraphicsEffect(opacity_effect)
+
         button_info = [
             ["Start (F11)", self.listener.start_listening, 110, 35, 20, 150],
             ["Stop (F11)", self.listener.stop_listening, 110, 35, 150, 150],
@@ -57,8 +76,7 @@ class App(QtWidgets.QWidget):
             button.clicked.connect(callback)
             button.setFixedSize(width, height)
             button.move(x, y)
-
-        self.update_button_style()
+            button.setStyleSheet("background-color: #4CAF50; color: white; font-size: 12px;")
 
         self.show()
         self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
@@ -87,6 +105,9 @@ class App(QtWidgets.QWidget):
             self.key_label.setText(f"Key to Bind: {key_name}")
             print(f"Key to bind set to {key_name}")
 
+            # Démarre l'animation d'opacité lors de l'apparition du texte
+            self.chat_box_opacity_animation.start()
+
     def bind_key_pressed(self):
         self.bind_key(self.handle_key_pressed)
 
@@ -96,6 +117,9 @@ class App(QtWidgets.QWidget):
             self.base_key.setText(f"Base Key: {key_name}")
             print(f"Base key set to {key_name}")
 
+            # Démarre l'animation d'opacité lors de l'apparition du texte
+            self.chat_box_opacity_animation.start()
+
     def bind_base_key_pressed(self):
         self.bind_key(self.handle_base_key_pressed)
 
@@ -104,6 +128,8 @@ class App(QtWidgets.QWidget):
             # Perform actions associated with the bound key and base key
             print(f"Key {self.key_value} pressed")
             print(f"Base key: {self.key_base}")
+
+            # Ajoute ici d'autres animations ou actions que tu veux effectuer
 
     def keyPressEvent(self, event):
         if event.key() == QtCore.Qt.Key_F11:
