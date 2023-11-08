@@ -45,12 +45,10 @@ class InputListener:
         self.app.chat_box.append(text)
 
     def on_click(self, x, y, button, pressed):
-        action = 'cliquée' if pressed else 'relâchée'
-        self.app.chat_box.append(f'Souris {button.name} {action}\n')
+        self.app.chat_box.append(f'Mouse {button.name}\n')
 
         key_base = self.app.key_base
         key_value = self.app.key_value
-        print(key_base, key_value)
 
         if button == mouse.Button.right:
             if pressed:

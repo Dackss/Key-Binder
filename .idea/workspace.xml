@@ -5,9 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="da92e6fa-47d4-4916-9b64-10da24694075" name="Changes" comment="Graphics Update">
-      <change afterPath="$PROJECT_DIR$/src/files/CustomButton.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/files/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/files/app.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/files/input_listener.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/files/input_listener.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -174,7 +171,7 @@
       <workItem from="1699465749725" duration="33000" />
       <workItem from="1699465792976" duration="555000" />
       <workItem from="1699466676634" duration="3320000" />
-      <workItem from="1699476859536" duration="2256000" />
+      <workItem from="1699476859536" duration="2425000" />
     </task>
     <task id="LOCAL-00001" summary="Init">
       <created>1699465609029</created>
@@ -226,6 +223,6 @@
     <SUITE FILE_PATH="coverage/Macro_Right_clic$main__1_.coverage" NAME="main (1) Coverage Results" MODIFIED="1699466278599" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
     <SUITE FILE_PATH="coverage/Key_Binder__nothing_suspicious_$main.coverage" NAME="main Coverage Results" MODIFIED="1699465412804" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Macro_Right_clic$main.coverage" NAME="main Coverage Results" MODIFIED="1699466332891" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
-    <SUITE FILE_PATH="coverage/Key_Binder$main.coverage" NAME="main Coverage Results" MODIFIED="1699479098587" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Key_Binder$main.coverage" NAME="main Coverage Results" MODIFIED="1699479316213" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
