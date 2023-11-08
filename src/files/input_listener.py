@@ -52,13 +52,21 @@ class InputListener:
         key_value = self.app.key_value
         print(key_base, key_value)
 
-        if key_base and key_value:
+        if button == mouse.Button.right:
+            if pressed:
+                # Shift est pressé lors du clic droit
+                keyboard.Controller().press(keyboard.Key.shift)
+            else:
+                # Shift est relâché lors du relâchement du clic droit
+                keyboard.Controller().release(keyboard.Key.shift)
+
+        """else key_base and key_value:
             if key_base in self.key_mapping:
                 mapped_key = self.key_mapping[key_base]
                 if button == mouse.Button.right and pressed:
                     keyboard.Controller().press(mapped_key)
                 elif button == mouse.Button.right and not pressed:
-                    keyboard.Controller().release(mapped_key)
+                    keyboard.Controller().release(mapped_key)"""
 
     def toggle_listening(self):
         if self.is_listening:

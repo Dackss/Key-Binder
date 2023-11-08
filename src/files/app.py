@@ -1,7 +1,7 @@
 from PyQt5 import QtWidgets, QtGui, QtCore
 from PyQt5.QtWidgets import QGraphicsOpacityEffect
+from src.files.CustomButton import CustomButton
 from PyQt5.QtCore import QPropertyAnimation
-
 from src.files.input_listener import InputListener
 from src.files.keybind_window import KeyBindWindow
 
@@ -12,8 +12,6 @@ class App(QtWidgets.QWidget):
         self.chat_box_opacity_animation = None
         self.key_label = None
         self.key_base = None
-        self.on_release = None
-        self.on_press = None
         self.listener = InputListener(self)
         self.key_value = None
         self.init_ui()
@@ -23,7 +21,6 @@ class App(QtWidgets.QWidget):
         self.setWindowIcon(QtGui.QIcon("src/assets/logo.png"))
         self.setGeometry(100, 100, 575, 350)
 
-        # Styles directement dans le code
         self.setStyleSheet("""
             background-color: #D1D2D4;
             font-family: Lucida;
@@ -72,27 +69,13 @@ class App(QtWidgets.QWidget):
         ]
 
         for label, callback, width, height, x, y in button_info:
-            button = QtWidgets.QPushButton(label, self)
+            button = CustomButton(label, self)
             button.clicked.connect(callback)
             button.setFixedSize(width, height)
             button.move(x, y)
-            button.setStyleSheet("background-color: #4CAF50; color: white; font-size: 12px;")
 
         self.show()
         self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
-
-    def update_button_style(self):
-        active_color = QtGui.QColor(200, 200, 200)
-        inactive_color = QtGui.QColor(255, 255, 255)
-
-        for button in self.findChildren(QtWidgets.QPushButton):
-            if button.isChecked():
-                if button.text() == "Stop (F11)":
-                    button.setStyleSheet(f"background-color: {inactive_color.name()};")
-                else:
-                    button.setStyleSheet(f"background-color: {active_color.name()};")
-            else:
-                button.setStyleSheet(f"background-color: {inactive_color.name()};")
 
     def bind_key(self, callback):
         key_bind_window = KeyBindWindow(self)
@@ -104,8 +87,6 @@ class App(QtWidgets.QWidget):
             self.key_value = key_name
             self.key_label.setText(f"Key to Bind: {key_name}")
             print(f"Key to bind set to {key_name}")
-
-            # Démarre l'animation d'opacité lors de l'apparition du texte
             self.chat_box_opacity_animation.start()
 
     def bind_key_pressed(self):
@@ -116,8 +97,6 @@ class App(QtWidgets.QWidget):
             self.key_base = key_name
             self.base_key.setText(f"Base Key: {key_name}")
             print(f"Base key set to {key_name}")
-
-            # Démarre l'animation d'opacité lors de l'apparition du texte
             self.chat_box_opacity_animation.start()
 
     def bind_base_key_pressed(self):
@@ -125,17 +104,5 @@ class App(QtWidgets.QWidget):
 
     def bind_actions(self):
         if self.key_value is not None and self.key_base is not None:
-            # Perform actions associated with the bound key and base key
             print(f"Key {self.key_value} pressed")
             print(f"Base key: {self.key_base}")
-
-            # Ajoute ici d'autres animations ou actions que tu veux effectuer
-
-    def keyPressEvent(self, event):
-        if event.key() == QtCore.Qt.Key_F11:
-            self.listener.toggle_listening()
-            self.update_button_style()
-
-    def closeEvent(self, event):
-        self.listener.stop_listening()
-        super().closeEvent(event)
