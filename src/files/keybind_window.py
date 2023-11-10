@@ -1,8 +1,9 @@
 from PyQt5 import QtWidgets, QtGui, QtCore
+from PyQt5.QtCore import Qt, pyqtSignal, QEvent
 
 
 class KeyBindWindow(QtWidgets.QDialog):
-    keyPressed = QtCore.pyqtSignal(str)
+    keyPressed = pyqtSignal(str)
 
     def __init__(self, parent):
         super().__init__(parent)
@@ -12,55 +13,66 @@ class KeyBindWindow(QtWidgets.QDialog):
         self.label = QtWidgets.QLabel("Waiting...", self)
         self.label.setGeometry(QtCore.QRect(80, 30, 150, 30))
         self.label.setFont(QtGui.QFont("Arial", 12))
-        self.label.setAlignment(QtCore.Qt.AlignCenter)
+        self.label.setAlignment(Qt.AlignCenter)
         self.setWindowIcon(QtGui.QIcon("src/assets/logo.png"))
 
     def keyPressEvent(self, event):
-        if event.type() == QtCore.QEvent.KeyPress:
-            modifiers = event.modifiers()
-            key_name = self.get_key_name(event.key(), modifiers)
-            self.keyPressed.emit(key_name)
-            self.close()
+        try:
+            if event.type() == QEvent.KeyPress:
+                modifiers = event.modifiers()
+                key_name = self.get_key_name(event.key(), modifiers)
+                self.keyPressed.emit(key_name if key_name else "No key pressed")
+                self.close()
+        except Exception as e:
+            print(f"Error in keyPressEvent: {e}")
 
     def mousePressEvent(self, event):
-        if event.type() == QtCore.QEvent.MouseButtonPress:
-            button_name = self.get_mouse_button_name(event.button())
-            self.keyPressed.emit(button_name)
-            self.close()
+        try:
+            if event.type() == QtCore.QEvent.MouseButtonPress:
+                button_name = self.get_mouse_button_name(event.button())
+                if button_name:
+                    self.keyPressed.emit(button_name)
+                else:
+                    self.keyPressed.emit("No key pressed")
+                self.close()
+        except Exception as e:
+            print(f"Error in mousePressEvent: {e}")
 
-    def get_key_name(self, key, modifiers):
-        if key == QtCore.Qt.Key_Shift:
+    @staticmethod
+    def get_key_name(key, modifiers):
+        if key == Qt.Key_Shift:
             return "Shift"
-        elif key == QtCore.Qt.Key_Control:
+        elif key == Qt.Key_Control:
             return "Ctrl"
-        elif key == QtCore.Qt.Key_Alt:
+        elif key == Qt.Key_Alt:
             return "Alt"
-        elif key == QtCore.Qt.Key_Meta:
+        elif key == Qt.Key_Meta:
             return "Meta"
         key_sequence = QtGui.QKeySequence(key)
         key_name = key_sequence.toString(QtGui.QKeySequence.NativeText)
-        if modifiers & QtCore.Qt.ShiftModifier:
+        if modifiers & Qt.ShiftModifier:
             key_name = "Shift+" + key_name
-        if modifiers & QtCore.Qt.ControlModifier:
+        if modifiers & Qt.ControlModifier:
             key_name = "Ctrl+" + key_name
-        if modifiers & QtCore.Qt.AltModifier:
+        if modifiers & Qt.AltModifier:
             key_name = "Alt+" + key_name
-        if modifiers & QtCore.Qt.MetaModifier:
+        if modifiers & Qt.MetaModifier:
             key_name = "Meta+" + key_name
         return key_name
 
-    def get_mouse_button_name(self, button):
-        if button == QtCore.Qt.LeftButton:
+    @staticmethod
+    def get_mouse_button_name(button):
+        if button == Qt.LeftButton:
             return "Left Button"
-        elif button == QtCore.Qt.RightButton:
+        elif button == Qt.RightButton:
             return "Right Button"
-        elif button == QtCore.Qt.MiddleButton:
+        elif button == Qt.MiddleButton:
             return "Middle Button"
-        elif button == QtCore.Qt.BackButton:
+        elif button == Qt.BackButton:
             return "Back Button"
-        elif button == QtCore.Qt.ForwardButton:
+        elif button == Qt.ForwardButton:
             return "Forward Button"
-        elif button == QtCore.Qt.WheelButton:
+        elif button == Qt.WheelButton:
             return "Wheel Button"
         else:
             return "Unknown Button"

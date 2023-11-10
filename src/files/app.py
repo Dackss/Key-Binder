@@ -1,7 +1,6 @@
 from PyQt5 import QtWidgets, QtGui, QtCore
-from PyQt5.QtWidgets import QGraphicsOpacityEffect
 from src.files.CustomButton import CustomButton
-from PyQt5.QtCore import QPropertyAnimation
+
 from src.files.input_listener import InputListener
 from src.files.keybind_window import KeyBindWindow
 
@@ -17,9 +16,18 @@ class App(QtWidgets.QWidget):
         self.init_ui()
 
     def init_ui(self):
+        """import sys
+        sys.excepthook = sys.__excepthook__
+
+        def exception_hook(exctype, value, traceback):
+            print(exctype, value, traceback)
+            sys.__excepthook__(exctype, value, traceback)
+
+        sys.excepthook = exception_hook"""
+
         self.setWindowTitle("Key Binder")
         self.setWindowIcon(QtGui.QIcon("src/assets/logo.png"))
-        self.setGeometry(100, 100, 575, 350)
+        self.setGeometry(900, 500, 600, 275)
 
         self.setStyleSheet("""
             background-color: #D1D2D4;
@@ -27,15 +35,15 @@ class App(QtWidgets.QWidget):
         """)
 
         element_info = [
-            {"type": QtWidgets.QLabel, "text": "Output", "font_size": 15, "geometry": (400, 8, 250, 20)},
-            {"type": QtWidgets.QTextEdit, "name": "chat_box", "font_size": 12, "geometry": (300, 30, 250, 230),
-             "read_only": True, "border_radius": 10},
-            {"type": QtWidgets.QLabel, "name": "key_label", "text": "No key bound", "font_size": 12,
-             "geometry": (150, 200, 250, 20)},
+            {"type": QtWidgets.QLabel, "text": "Output", "font_size": 15, "geometry": (400, 5, 250, 30)},
+            {"type": QtWidgets.QTextEdit, "name": "chat_box", "font_size": 8, "geometry": (335, 40, 250, 230),
+             "read_only": True, "border_radius": 10, "background_color": "#EAEAEA"},
+            {"type": QtWidgets.QLabel, "name": "key_label", "text": "No key bound", "font_size": 8,
+             "geometry": (150, 200, 180, 30)},
             {"type": QtWidgets.QDialogButtonBox, "name": "button_box", "font_size": 12,
              "geometry": (300, 310, 250, 50)},
-            {"type": QtWidgets.QLabel, "name": "base_key", "text": "Base Key: None", "font_size": 12,
-             "geometry": (150, 50, 250, 20)},
+            {"type": QtWidgets.QLabel, "name": "base_key", "text": "Base Key: None", "font_size": 8,
+             "geometry": (150, 50, 180, 30)},
         ]
 
         for info in element_info:
@@ -48,18 +56,8 @@ class App(QtWidgets.QWidget):
                 element.setFont(QtGui.QFont("Arial", info["font_size"]))
             if "geometry" in info:
                 element.setGeometry(*info["geometry"])
-            if "read_only" in info:
-                element.setReadOnly(info["read_only"])
-
-        # Animation d'opacité pour la text box
-        self.chat_box_opacity_animation = QPropertyAnimation(self.chat_box.document(), b"opacity")
-        self.chat_box_opacity_animation.setDuration(500)
-        self.chat_box_opacity_animation.setStartValue(0.0)
-        self.chat_box_opacity_animation.setEndValue(1.0)
-
-        # Ajout de l'effet d'opacité à la text box
-        opacity_effect = QGraphicsOpacityEffect(self.chat_box)
-        self.chat_box.setGraphicsEffect(opacity_effect)
+            if "background_color" in info:
+                element.setStyleSheet(f"background-color: {info['background_color']};")
 
         button_info = [
             ["Start (F11)", self.listener.start_listening, 110, 35, 20, 150],
@@ -78,31 +76,49 @@ class App(QtWidgets.QWidget):
         self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
 
     def bind_key(self, callback):
-        key_bind_window = KeyBindWindow(self)
-        key_bind_window.keyPressed.connect(callback)
-        key_bind_window.exec_()
+        try:
+            key_bind_window = KeyBindWindow(self)
+            key_bind_window.keyPressed.connect(callback)
+            key_bind_window.exec_()
+        except Exception as e:
+            print(f"Erreur dans bind_key : {e}")
 
     def handle_key_pressed(self, key_name):
-        if key_name and key_name != "Waiting...":
-            self.key_value = key_name
-            self.key_label.setText(f"Key to Bind: {key_name}")
-            print(f"Key to bind set to {key_name}")
-            self.chat_box_opacity_animation.start()
+        try:
+            if key_name and key_name != "Waiting...":
+                self.key_value = key_name
+                self.key_label.setText(f"Key to Bind: {key_name}")
+                print(f"Key to bind set to {key_name}")
+                self.chat_box_opacity_animation.start()
+        except Exception as e:
+            print(f"Erreur dans handle_key_pressed : {e}")
 
     def bind_key_pressed(self):
-        self.bind_key(self.handle_key_pressed)
+        try:
+            self.bind_key(self.handle_key_pressed)
+        except Exception as e:
+            print(f"Erreur dans bind_key_pressed : {e}")
 
     def handle_base_key_pressed(self, key_name):
-        if key_name and key_name != "Waiting...":
-            self.key_base = key_name
-            self.base_key.setText(f"Base Key: {key_name}")
-            print(f"Base key set to {key_name}")
-            self.chat_box_opacity_animation.start()
+        try:
+            if key_name and key_name != "Waiting...":
+                self.key_base = key_name
+                self.base_key.setText(f"Base Key: {key_name}")
+                print(f"Base key set to {key_name}")
+                self.chat_box_opacity_animation.start()
+        except Exception as e:
+            print(f"Erreur dans handle_base_key_pressed : {e}")
 
     def bind_base_key_pressed(self):
-        self.bind_key(self.handle_base_key_pressed)
+        try:
+            self.bind_key(self.handle_base_key_pressed)
+        except Exception as e:
+            print(f"Erreur dans bind_base_key_pressed : {e}")
 
     def bind_actions(self):
-        if self.key_value is not None and self.key_base is not None:
-            print(f"Key {self.key_value} pressed")
-            print(f"Base key: {self.key_base}")
+        try:
+            if self.key_value is not None and self.key_base is not None:
+                print(f"Key {self.key_value} pressed")
+                print(f"Base key: {self.key_base}")
+        except Exception as e:
+            print(f"Erreur dans bind_actions : {e}")
