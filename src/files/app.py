@@ -58,6 +58,8 @@ class App(QtWidgets.QWidget):
                 element.setGeometry(*info["geometry"])
             if "background_color" in info:
                 element.setStyleSheet(f"background-color: {info['background_color']};")
+            if isinstance(element, QtWidgets.QTextEdit) and "read_only" in info:
+                element.setReadOnly(info["read_only"])
 
         button_info = [
             ["Start (F11)", self.listener.start_listening, 110, 35, 20, 150],
@@ -89,7 +91,6 @@ class App(QtWidgets.QWidget):
                 self.key_value = key_name
                 self.key_label.setText(f"Key to Bind: {key_name}")
                 print(f"Key to bind set to {key_name}")
-                self.chat_box_opacity_animation.start()
         except Exception as e:
             print(f"Erreur dans handle_key_pressed : {e}")
 
@@ -114,11 +115,3 @@ class App(QtWidgets.QWidget):
             self.bind_key(self.handle_base_key_pressed)
         except Exception as e:
             print(f"Erreur dans bind_base_key_pressed : {e}")
-
-    def bind_actions(self):
-        try:
-            if self.key_value is not None and self.key_base is not None:
-                print(f"Key {self.key_value} pressed")
-                print(f"Base key: {self.key_base}")
-        except Exception as e:
-            print(f"Erreur dans bind_actions : {e}")
